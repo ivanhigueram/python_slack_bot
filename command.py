@@ -1,5 +1,6 @@
 import os
 import dropbox
+import pandas as pd
 from tabulate import tabulate 
 from get_data import(create_pgconn,
                      get_uploaded_ids,
@@ -14,21 +15,24 @@ class Command(object):
 
     def handle_command(self, user, command):
         response = "<@" + user + ">: "
- 
+
         if command in self.commands:
             response += self.commands[command]()
         else:
            response += "Sorry I don't understand the command: " + command + ". " + self.help()
- 
+
         return response
- 
+
     def status(self):
-        dbx = dropbox.Dropbox(os.environ['DROPBOX_API_KEY'])
         engine = create_pgconn('db_credentials.yaml')
-        return_files = return_count_files(dropbox_conn = dbx,
-                                          engine=engine,
-                                          path='/noaa/integrated_surface_updated/clean')
-        message = tabulate(return_files,
+        status_dropbox_updates = pd.read_sql('''
+                                             select * 
+                                             from dropbox_updates
+                                             ''',
+                                             con=engine
+                                            )
+
+        message = tabulate(status_dropbox_updates,
                            headers = 'keys',
                            tablefmt='fancy_grid')
 
