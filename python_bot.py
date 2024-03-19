@@ -1,3 +1,0 @@
-import botpy
-
-botpy.Bot()

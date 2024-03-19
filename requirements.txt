@@ -1,8 +1,0 @@
-pandas
-slackclient
-numpy
-sqlalchemy
-psycopg2
-dropbox
-tabulate
-PyYAML
