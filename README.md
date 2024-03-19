@@ -17,7 +17,7 @@ in the SQL database (`text` column, following the `slack-sdk` standard). Once pr
 data is stored in the `parsed_messages` table with the `ts` identifier and the `channel_id`, and
 later pushed to a Google Spreadsheet. 
 
-$$ Language model configuration
+## Language model configuration
  - Prompting design happens in `src/extractor.py`, but changes to the prompt are done in other 
  parts of the script. We follow the following prompting strategy:
  ```
