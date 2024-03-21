@@ -1,0 +1,13 @@
+[Unit]
+Description=My test service
+After=syslog.target network.target
+
+[Service]
+Restart=always
+WorkingDirectory=/home/topcat/projects/python_slack_bot
+ExecStart=/home/topcat/miniforge3/envs/slackbot/bin/python echolab_candidates_bot.py
+User=topcat
+EnvironmentFile=/etc/slack_bot/env.conf
+
+[Install]
+WantedBy=multi-user.target
