@@ -7,16 +7,21 @@ from slack_bolt import App
 from slack_bolt.adapter.socket_mode import SocketModeHandler
 from slack_sdk import WebClient
 from tqdm import tqdm
+from dotenv import load_dotenv
+
 
 from src.retrieve_messages import parsing_messages, retrieve_messages
 from src.utils import send_messages_to_google_spreadsheet
 
 logging.basicConfig(level=logging.DEBUG)
 
-# Set up the Slack client
+# Set up the Slack client and Bolt app
+
+# Load environment variables
+load_dotenv()
+
 slack_token = os.getenv("SLACK_API_TOKEN")
 slack_bot_token = os.getenv("SLACK_BOT_TOKEN")
-slack_secret = os.getenv("SLACK_SIGNING_SECRET")
 client = WebClient(token=slack_token)
 bolt_app = App(token=slack_token)
 
@@ -53,7 +58,9 @@ def event_test(say):
 def summary_command(say, ack):
     ack("Querying database... 👨🏽‍💻")
 
-    conn = sqlite3.connect("/home/topcat/projects/python_slack_bot/data/slackbot_messages.db")
+    conn = sqlite3.connect(
+        "/home/topcat/projects/python_slack_bot/data/slackbot_messages.db"
+    )
 
     query = """
         WITH table_group AS (
@@ -104,7 +111,9 @@ def reload_command(say, ack):
     poster_ids = ["U06N7CSQQKZ", "WBA9HFDCL"]
     save_data = "/home/topcat/projects/python_slack_bot/data/downloads"
 
-    conn = sqlite3.connect("/home/topcat/projects/python_slack_bot/data/slackbot_messages.db")
+    conn = sqlite3.connect(
+        "/home/topcat/projects/python_slack_bot/data/slackbot_messages.db"
+    )
     """Reload database to include new candidates in channel"""
     ack("Loading database... 👨🏽‍💻")
     # Retrieve messages from the channel
@@ -123,7 +132,9 @@ def reload_command(say, ack):
 
     # Send parsed messages to Google Spreadsheet
     send_messages_to_google_spreadsheet(
-        parsed_messages, credentials="creds.json", conn=conn
+        parsed_messages=parsed_messages,
+        credentials="/home/topcat/projects/python_slack_bot/creds.json",
+        conn=conn,
     )
 
     # Send message to Slacks

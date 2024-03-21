@@ -1,5 +1,4 @@
 import os
-import sqlite3
 
 import pandas as pd
 import requests
@@ -7,7 +6,7 @@ from slack_sdk.errors import SlackApiError
 from tqdm import tqdm
 
 from .extractor import run_model_w_examples
-from .database_manager import create_database, structure_messages
+from .database_manager import structure_messages
 
 
 def retrieve_messages(

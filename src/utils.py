@@ -26,13 +26,11 @@ def send_messages_to_google_spreadsheet(parsed_messages, credentials, conn):
 
     # Build a data frame with the records in list
 
-    if parsed_messages is None:
-        return
-    else:
+    if parsed_messages is not None:
         data = pd.concat(parsed_messages)
 
-    # Format a nice table using SQL to upload to Google Sheets
-    data.to_sql(name="parsed_messages", con=conn, if_exists="append", index=False)
+        # Format a nice table using SQL to upload to Google Sheets
+        data.to_sql(name="parsed_messages", con=conn, if_exists="append", index=False)
 
     # Send clean data to Google Spreadsheet by replacing channel_id with the channel name
     data_tidy = pd.read_sql_query(
@@ -45,6 +43,10 @@ def send_messages_to_google_spreadsheet(parsed_messages, credentials, conn):
         conn,
     )
 
+    # Transform the ts column to a datetime object and add the current processing date
+    data_tidy["ts"] = pd.to_datetime(data_tidy["ts"], unit="s")
+    data_tidy["processing_date"] = pd.to_datetime("today")
+
     # Send data to Google Spreadsheet
     if credentials:
         gc = gspread.service_account(filename=credentials)
@@ -56,7 +58,7 @@ def send_messages_to_google_spreadsheet(parsed_messages, credentials, conn):
 
     set_with_dataframe(worksheet, data_tidy)
 
-    return data
+    return None
 
 
 def load_examples(path_to_examples):
