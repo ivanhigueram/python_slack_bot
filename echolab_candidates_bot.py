@@ -53,7 +53,7 @@ def event_test(say):
 def summary_command(say, ack):
     ack("Querying database... 👨🏽‍💻")
 
-    conn = sqlite3.connect("data/slackbot_messages.db")
+    conn = sqlite3.connect("/home/topcat/projects/python_slack_bot/data/slackbot_messages.db")
 
     query = """
         WITH table_group AS (
@@ -102,9 +102,9 @@ def summary_command(say, ack):
 def reload_command(say, ack):
     channel_ids = ["C06PSDC08AX", "C06Q5A168DP", "C06PRB2EX61"]
     poster_ids = ["U06N7CSQQKZ", "WBA9HFDCL"]
-    save_data = "./data/downloads"
+    save_data = "/home/topcat/projects/python_slack_bot/data/downloads"
 
-    conn = sqlite3.connect("data/slackbot_messages.db")
+    conn = sqlite3.connect("/home/topcat/projects/python_slack_bot/data/slackbot_messages.db")
     """Reload database to include new candidates in channel"""
     ack("Loading database... 👨🏽‍💻")
     # Retrieve messages from the channel
@@ -114,7 +114,7 @@ def reload_command(say, ack):
             channel_id,
             filter_users=poster_ids,
             save_data=save_data,
-            db_path="data/messages.db",
+            db_conn=conn,
             messages_table="messages",
         )
 

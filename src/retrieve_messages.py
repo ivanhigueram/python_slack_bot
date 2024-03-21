@@ -13,7 +13,7 @@ from .database_manager import create_database, structure_messages
 def retrieve_messages(
     client,
     channel_id,
-    db_path,
+    db_conn,
     messages_table,
     save_data="data",
     filter_users=None,
@@ -32,12 +32,6 @@ def retrieve_messages(
     Returns:
         list: A list of messages from the channel
     """
-
-    # Create SQLite connection
-    if not os.path.exists(os.path.join(save_data, db_path)):
-        conn, c = create_database()
-    else:
-        conn = sqlite3.connect(os.path.join(save_data, db_path))
 
     # Create folder if save_data doesn't exist
     if not os.path.exists("data/downloads"):
@@ -97,7 +91,7 @@ def retrieve_messages(
     )
 
     # Update database
-    df.to_sql(messages_table, conn, if_exists="append", index=False)
+    df.to_sql(messages_table, db_conn, if_exists="append", index=False)
 
     return messages
 
